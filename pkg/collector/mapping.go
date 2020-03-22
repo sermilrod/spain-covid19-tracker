@@ -1,0 +1,46 @@
+package collector
+
+var (
+	ccaaISOCode = map[string]string{
+		"AN": "andalucia",
+		"AR": "aragon",
+		"AS": "asturias",
+		"IB": "islas_baleares",
+		"CN": "canarias",
+		"CB": "cantabria",
+		"CM": "castilla_la_mancha",
+		"CL": "castilla_leon",
+		"CT": "catalunya",
+		"CE": "ceuta",
+		"VC": "comunidad_valenciana",
+		"EX": "extremadura",
+		"GA": "galicia",
+		"MD": "madrid",
+		"ME": "melilla",
+		"MC": "murcia",
+		"NC": "navarra",
+		"PV": "pais_vasco",
+		"RI": "la_rioja",
+	}
+	ccaaInhabitatns = map[string]int64{
+		"AN": 8426405,
+		"AR": 1320794,
+		"AS": 1022293,
+		"IB": 1187808,
+		"CN": 2207225,
+		"CB": 581684,
+		"CM": 2035505,
+		"CL": 2408083,
+		"CT": 7565099,
+		"CE": 84843,
+		"VC": 4974475,
+		"EX": 1065371,
+		"GA": 2700330,
+		"MD": 6640705,
+		"ME": 84714,
+		"MC": 1487698,
+		"NC": 653846,
+		"PV": 2178048,
+		"RI": 313582,
+	}
+)
