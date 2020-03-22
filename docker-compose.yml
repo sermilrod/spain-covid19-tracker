@@ -1,0 +1,40 @@
+version: "3.7"
+volumes:
+  influxdb-data:
+  grafana-data:
+networks:
+  tracker:
+services:  
+  tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - tracker
+  influxdb:
+    image: influxdb:1.7.10
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+      - "8089:8089"
+    links:
+      - tracker
+    env_file:
+      - ./deploy/influxdb.env
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+    networks:
+      - tracker
+  
+  grafana:
+    image: grafana/grafana:6.7.1
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    links:
+      - influxdb
+    volumes:
+      - grafana-data:/var/lib/grafana"
+      - ./deploy/provisioning:/etc/grafana/provisioning
+    networks:
+      - tracker

@@ -1,0 +1,9 @@
+datasources:
+- name: InfluxDB
+  type: influxdb
+  access: proxy
+  database: spain_covid19
+  url: "http://influxdb:8086"
+  isDefault: true
+  version: 1
+  editable: false
