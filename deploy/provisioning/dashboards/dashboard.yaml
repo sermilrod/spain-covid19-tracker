@@ -1,0 +1,12 @@
+apiVersion: 1
+providers:
+- name: 'covid19'
+  orgId: 1
+  folder: "COVID-19"
+  type: file
+  disableDeletion: true
+  editable: true
+  updateIntervalSeconds: 10
+  allowUiUpdates: false
+  options:
+    path: /etc/grafana/provisioning/dashboards/covid19

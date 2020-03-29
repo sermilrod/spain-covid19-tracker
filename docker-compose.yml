@@ -20,7 +20,7 @@ services:
     links:
       - tracker
     env_file:
-      - ./influxdb.env
+      - ./deploy/influxdb.env
     volumes:
       - influxdb-data:/var/lib/influxdb
     networks:
@@ -35,5 +35,6 @@ services:
       - influxdb
     volumes:
       - grafana-data:/var/lib/grafana"
+      - ./deploy/provisioning:/etc/grafana/provisioning
     networks:
       - tracker
