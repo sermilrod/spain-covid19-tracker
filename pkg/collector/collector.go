@@ -56,6 +56,7 @@ func (col *Covid19Collector) WriteMetricWithTimestamp(
 }
 
 func (col *Covid19Collector) UpdateStatus() error {
+	casesYesterday := make(map[string]int64)
 	log.Println("Fetching data")
 	dataRes, err := col.httpClient.Get(col.seriesURL)
 	if err != nil {
@@ -66,7 +67,8 @@ func (col *Covid19Collector) UpdateStatus() error {
 		return err
 	}
 	log.Println("Persisting data")
-	for _, data := range csvData[1 : len(csvData)-2] {
+	info := csvData[1 : len(csvData)-2]
+	for index, data := range info {
 		ccaaCases := NewCCAACases(data)
 		if err := col.UpdateCases(ccaaCases); err != nil {
 			return err
@@ -74,6 +76,16 @@ func (col *Covid19Collector) UpdateStatus() error {
 		if err := col.UpdateCasesPer100K(ccaaCases); err != nil {
 			return err
 		}
+		if index > 0 {
+			if err := col.UpdateInfectionRate(
+				ccaaCases.cases,
+				casesYesterday[ccaaCases.code],
+				ccaaCases.code,
+				ccaaCases.date); err != nil {
+				return err
+			}
+		}
+		casesYesterday[ccaaCases.code] = ccaaCases.cases
 	}
 	return nil
 }
@@ -115,6 +127,31 @@ func (col *Covid19Collector) UpdateCasesPer100K(c *CCAACases) error {
 		tags,
 		fields,
 		c.date,
+	)
+}
+
+func (col *Covid19Collector) UpdateInfectionRate(
+	infectedToday, infectedYesterday int64, code string,
+	date time.Time) error {
+
+	// Skip NaN when there is no data
+	if infectedYesterday < 1 {
+		return nil
+	}
+	tags := map[string]string{}
+	rate := float64(infectedToday) / float64(infectedYesterday)
+	fields := map[string]interface{}{"rate": rate}
+
+	cc, err := client.NewInfluxDBClient(col.dbAddr)
+	if err != nil {
+		return err
+	}
+	return col.WriteMetricWithTimestamp(
+		cc,
+		fmt.Sprintf("%s_infection_rate_%s", col.database, ccaaISOCode[code]),
+		tags,
+		fields,
+		date,
 	)
 }
 
