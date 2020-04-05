@@ -31,7 +31,7 @@ $ go run main.go
 |-------------|-------------|
 | spain_covid19_cases_total | Accumulated value of all types of cases nation wide |
 | spain_covid19_cases_region | Accumulated value of all types of cases in region |
-| spain_covid19_cases_per_100000_<region> | Accumulated value per 100000 inhabitatns of total cases in region |
+| spain_covid19_cases_per_100000_region | Accumulated value per 100000 inhabitatns of total cases in region |
 | spain_covid19_infection_rate_region | Rate of new infections in region |
 
 ### Available regions
