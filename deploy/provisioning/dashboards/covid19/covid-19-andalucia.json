@@ -425,7 +425,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Muertos",
+      "title": "Fallecidos",
       "type": "stat"
     },
     {
@@ -638,7 +638,7 @@
           "tags": []
         },
         {
-          "alias": "Muertes",
+          "alias": "Fallecidos",
           "groupBy": [
             {
               "params": [
@@ -700,6 +700,80 @@
               {
                 "params": [
                   "hospitalised"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Activos",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "spain_covid19_cases_andalucia",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "active"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Recuperados",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "spain_covid19_cases_andalucia",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "recovered"
                 ],
                 "type": "field"
               },
@@ -872,7 +946,7 @@
           "tags": []
         },
         {
-          "alias": "Muertes",
+          "alias": "Fallecidos",
           "groupBy": [
             {
               "params": [
@@ -944,6 +1018,80 @@
             ]
           ],
           "tags": []
+        },
+        {
+          "alias": "Activos",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "spain_covid19_cases_andalucia",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "active"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Recuperados",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "spain_covid19_cases_andalucia",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "recovered"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "thresholds": [],
@@ -966,6 +1114,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2067",
           "format": "short",
           "label": null,
           "logBase": 10,
@@ -974,6 +1123,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:2068",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1215,15 +1365,17 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1128",
           "decimals": 3,
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": "2",
-          "min": "1",
+          "max": "5",
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:1129",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1256,5 +1408,5 @@
   "variables": {
     "list": []
   },
-  "version": 23
+  "version": 24
 }

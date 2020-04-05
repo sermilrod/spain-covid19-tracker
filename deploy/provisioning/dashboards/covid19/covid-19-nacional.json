@@ -507,7 +507,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Muertos",
+      "title": "Fallecidos",
       "type": "stat"
     },
     {
@@ -666,7 +666,7 @@
           "tags": []
         },
         {
-          "alias": "Muertos",
+          "alias": "Fallecidos",
           "groupBy": [
             {
               "params": [
@@ -974,7 +974,7 @@
           "tags": []
         },
         {
-          "alias": "Muertos",
+          "alias": "Fallecidos",
           "groupBy": [
             {
               "params": [
@@ -2694,15 +2694,17 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:3124",
           "decimals": 3,
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": "5",
-          "min": "1",
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:3125",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -4245,5 +4247,5 @@
   "variables": {
     "list": []
   },
-  "version": 6
+  "version": 7
 }
