@@ -56,7 +56,8 @@ func (col *Covid19Collector) WriteMetricWithTimestamp(
 }
 
 func (col *Covid19Collector) UpdateStatus() error {
-	casesYesterday := make(map[string]int64)
+	totalCases := make(map[time.Time]map[string]int64)
+	activesYesterday := make(map[string]int64)
 	log.Println("Fetching data")
 	dataRes, err := col.httpClient.Get(col.seriesURL)
 	if err != nil {
@@ -78,14 +79,54 @@ func (col *Covid19Collector) UpdateStatus() error {
 		}
 		if index > 0 {
 			if err := col.UpdateInfectionRate(
-				ccaaCases.cases,
-				casesYesterday[ccaaCases.code],
+				ccaaCases.active,
+				activesYesterday[ccaaCases.code],
 				ccaaCases.code,
 				ccaaCases.date); err != nil {
 				return err
 			}
 		}
-		casesYesterday[ccaaCases.code] = ccaaCases.cases
+		activesYesterday[ccaaCases.code] = ccaaCases.active
+		inner, ok := totalCases[ccaaCases.date]
+		if !ok {
+			inner = make(map[string]int64)
+			totalCases[ccaaCases.date] = inner
+		}
+		totalCases[ccaaCases.date]["cases"] += ccaaCases.cases
+		totalCases[ccaaCases.date]["hospitalised"] += ccaaCases.hospitalised
+		totalCases[ccaaCases.date]["critical"] += ccaaCases.critical
+		totalCases[ccaaCases.date]["deaths"] += ccaaCases.deaths
+		totalCases[ccaaCases.date]["recovered"] += ccaaCases.recovered
+		totalCases[ccaaCases.date]["active"] += ccaaCases.active
+	}
+	return col.UpdateTotalCases(totalCases)
+}
+
+func (col *Covid19Collector) UpdateTotalCases(tc map[time.Time]map[string]int64) error {
+	tags := map[string]string{}
+
+	for date, data := range tc {
+		fields := map[string]interface{}{
+			"cases":        data["cases"],
+			"hospitalised": data["hospitalised"],
+			"critical":     data["critical"],
+			"deaths":       data["deaths"],
+			"recovered":    data["recovered"],
+			"active":       data["active"],
+		}
+		cc, err := client.NewInfluxDBClient(col.dbAddr)
+		if err != nil {
+			return err
+		}
+		if err := col.WriteMetricWithTimestamp(
+			cc,
+			fmt.Sprintf("%s_cases_total", col.database),
+			tags,
+			fields,
+			date,
+		); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -98,6 +139,8 @@ func (col *Covid19Collector) UpdateCases(c *CCAACases) error {
 		"hospitalised": c.hospitalised,
 		"critical":     c.critical,
 		"deaths":       c.deaths,
+		"recovered":    c.recovered,
+		"active":       c.active,
 	}
 	cc, err := client.NewInfluxDBClient(col.dbAddr)
 	if err != nil {
@@ -131,15 +174,15 @@ func (col *Covid19Collector) UpdateCasesPer100K(c *CCAACases) error {
 }
 
 func (col *Covid19Collector) UpdateInfectionRate(
-	infectedToday, infectedYesterday int64, code string,
+	activeToday, activeYesterday int64, code string,
 	date time.Time) error {
 
 	// Skip NaN when there is no data
-	if infectedYesterday < 1 {
+	if activeYesterday < 1 {
 		return nil
 	}
 	tags := map[string]string{}
-	rate := float64(infectedToday) / float64(infectedYesterday)
+	rate := float64(activeToday) / float64(activeYesterday)
 	fields := map[string]interface{}{"rate": rate}
 
 	cc, err := client.NewInfluxDBClient(col.dbAddr)
